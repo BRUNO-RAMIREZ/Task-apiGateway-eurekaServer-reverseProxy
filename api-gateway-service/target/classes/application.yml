@@ -1,0 +1,40 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: api-gateway-service
+
+  cloud:
+    gateway:
+      routes:
+        - id: employees-service
+          uri: lb://employees-service
+          predicates:
+            - Path=/employees/**
+          filters:
+            - AuthFilter
+
+        - id: assets-service
+          uri: lb://assets-service
+          predicates:
+            - Path=/assets/**
+
+        - id: requests-service
+          uri: lb://requests-service
+          predicates:
+            - Path=/requests/**
+
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/auth/**
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
